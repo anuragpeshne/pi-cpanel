@@ -1,7 +1,17 @@
 <!doctype html>
-<title>Hello from Flask</title>
+<title>Pi CPanel</title>
 {% if name %}
   <h1>Hello {{ name }}!</h1>
 {% else %}
   <h1>Hello, World!</h1>
 {% endif %}
+<div>
+  <form action="./cmd" method="GET">
+    <select name="command">
+      <option value="shutdown">Shutdown!</option>
+      <option value="reboot">Reboot</option>
+      <option value="uptime">Uptime</option>
+    </select>
+    <input type="submit" value="Execute" />
+</form>
+</div>
