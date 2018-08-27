@@ -5,6 +5,9 @@ $(document).ready(function() {
     var cmdSubmitBtn = $("#cmdSubmit");
     var cmdOption    = $("#cmdOption");
 
+    var playBtn      = $("#playBtn");
+    var playLink     = $("#playLink");
+
     cmdSubmitBtn.click(function(event) {
         event.preventDefault();
         $.ajax({
@@ -17,6 +20,20 @@ $(document).ready(function() {
         }).fail(function(err) {
             $('#result').html(err);
         });
+    });
+
+    playBtn.click(function(event) {
+      event.preventDefault();
+      $.ajax({
+        url: "/play_link",
+        method: 'POST',
+        data: {'link' : $('#playLink').val()},
+        context: document.body
+      }).done(function(data) {
+        $('#result').html(data);
+      }).fail(function(err) {
+        $('#result').html(err);
+      });
     });
 
     function update_temp() {

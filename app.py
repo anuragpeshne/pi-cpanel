@@ -2,7 +2,11 @@ from flask import Flask
 from flask import render_template
 from flask import request
 import subprocess
+
+from player import Player
+
 app = Flask(__name__, static_url_path='/static')
+omx_player = Player()
 
 # Machine info
 arch = subprocess.check_output(["uname", "-m"]).decode("utf-8")
@@ -35,6 +39,13 @@ def get_temp():
     else:
         temp_output = "NA"
     return temp_output
+
+@app.route("/play_link", methods=["POST"])
+def play_link():
+    link = request.form["link"]
+    omx_player.decode_url(link)
+    omx_player.play()
+    return "Now playing"
 
 if __name__ == "__main__":
     app.run()

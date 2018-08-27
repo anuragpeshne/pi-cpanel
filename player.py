@@ -9,16 +9,26 @@ class Player:
                                      "--get-url", url,
                                      "--playlist-start", str(self.playlist_index),
                                      "--no-playlist"],
-                                    stdout = subprocess.PIPE)
-        outs, errs = ydl_proc.communicate(input=None,timeout=5)
-        self.playlist = out.decode("utf-8").strip().split("\n")
-        return True
+                                    stdout = subprocess.PIPE,
+                                    stdin = subprocess.PIPE)
+        try:
+            outs, errs = ydl_proc.communicate(input=None,timeout=15)
+            outs = outs.decode("utf-8").strip().split("\n")
+            self.playlist = outs
+        except:
+            outs = "Timeout during decoding"
+        return outs
 
     def play(self):
         self.omx_proc = subprocess.Popen(["omxplayer",
                                           self.playlist[self.playlist_index]],
-                                         stdout = subprocess.PIPE)
-        outs, errs = self.omx_proc.communicate(input=None,timeout=3)
+                                         stdout = subprocess.PIPE,
+                                         stdin = subprocess.PIPE)
+        try:
+            outs, errs = self.omx_proc.communicate(input=None,timeout=3)
+        except:
+            outs = outs
+            pass
         return outs.decode("utf-8")
 
     def control_omx_proc(self, req):
@@ -31,7 +41,11 @@ class Player:
         elif (req == "quit"):
             cmd = "q"
 
-        outs, errs = self.omx_proc.communicate(input=cmd,timeout=1)
+        try:
+            outs, errs = self.omx_proc.communicate(input=cmd,timeout=1)
+        except:
+            outs = outs
+            pass
         if (cmd == "q"):
             self.reset()
         return outs.decode("utf-8")
