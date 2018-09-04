@@ -42,10 +42,12 @@ def get_temp():
 
 @app.route("/play_link", methods=["POST"])
 def play_link():
+    if omx_player.nowplaying == True:
+        omx_player.stop()
     link = request.form["link"]
     omx_player.decode_url(link)
     omx_player.play()
     return "Now playing"
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0', port=80)

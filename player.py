@@ -6,6 +6,7 @@ class Player:
 
     def decode_url(self, url):
         ydl_proc = pexpect.spawn('youtube-dl --get-url ' + url +
+                                 ' -f best ' +
                                  ' --playlist-start ' + str(self.playlist_index) +
                                  ' --no-playlist')
         ydl_proc.expect('http.*', timeout=15)
@@ -17,7 +18,13 @@ class Player:
     def play(self):
         self.omx_proc = pexpect.spawn('omxplayer ' + self.playlist[self.playlist_index - 1])
         self.omx_proc.expect("Video.*")
+        self.nowplaying = True
         return self.omx_proc.after.decode("utf-8")
+
+    def stop(self):
+        self.control_omx_proc('quit')
+        self.nowplaying = False
+        self.reset()
 
     def control_omx_proc(self, req):
         if (req == "vol_up"):
@@ -43,6 +50,6 @@ class Player:
     def reset(self):
         self.playlist_index = 1
         self.playlist = []
-        self.nowplaying = None
+        self.nowplaying = False
         self.omx_proc = None
 p = Player()

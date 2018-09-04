@@ -1,5 +1,6 @@
 'use strict';
 const TEMP_REFRESH_INTERVAL = 30 * 1000;
+const REQ_TIMEOUT           = 15 * 1000;
 
 $(document).ready(function() {
     var cmdSubmitBtn = $("#cmdSubmit");
@@ -14,11 +15,17 @@ $(document).ready(function() {
             url: "/cmd",
             method: 'GET',
             data: {'command' : $('#cmdOption').val()},
-            context: document.body
+            context: document.body,
+            timeout: REQ_TIMEOUT,
+            beforeSend: function() {
+              cmdSubmitBtn.addClass('loading');
+            }
         }).done(function(data) {
             $('#result').html(data);
         }).fail(function(err) {
             $('#result').html(err);
+        }).always(function() {
+          cmdSubmitBtn.removeClass('loading');
         });
     });
 
@@ -28,11 +35,17 @@ $(document).ready(function() {
         url: "/play_link",
         method: 'POST',
         data: {'link' : $('#playLink').val()},
-        context: document.body
+        context: document.body,
+        timeout: REQ_TIMEOUT,
+        beforeSend: function() {
+          playBtn.addClass('loading');
+        }
       }).done(function(data) {
         $('#result').html(data);
       }).fail(function(err) {
         $('#result').html(err);
+      }).always(function() {
+        playBtn.removeClass('loading');
       });
     });
 
@@ -40,7 +53,8 @@ $(document).ready(function() {
         $.ajax({
             url: "/temp",
             method: 'GET',
-            context: document.body
+            context: document.body,
+            timeout: 5000,
         }).done(function(data) {
             $('#temp').html(data);
         });
