@@ -8,6 +8,22 @@ $(document).ready(function() {
 
     var playBtn      = $("#playBtn");
     var playLink     = $("#playLink");
+    var pauseBtn     = $('#play-pause');
+
+    pauseBtn.click(function(event) {
+      event.preventDefault();
+      $.ajax({
+        url: "/control",
+        method: "POST",
+        data: {'command': "pause"},
+        timeout: REQ_TIMEOUT,
+        beforeSend: function() {
+          pauseBtn.addClass('loading');
+        }
+      }).always(function() {
+        pauseBtn.removeClass('loading');
+      });
+    });
 
     cmdSubmitBtn.click(function(event) {
         event.preventDefault();

@@ -43,11 +43,23 @@ def get_temp():
 @app.route("/play_link", methods=["POST"])
 def play_link():
     if omx_player.nowplaying == True:
-        omx_player.stop()
+        try:
+            omx_player.stop()
+        except:
+            print("exception occured")
+            omx_player.reset()
     link = request.form["link"]
     omx_player.decode_url(link)
     omx_player.play()
     return "Now playing"
 
+@app.route("/control", methods=["POST"])
+def control_player():
+    if omx_player.nowplaying:
+        output = omx_player.control_omx_proc("pause_toggle")
+    else:
+        output = "No player playing"
+    return output
+
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=8080)
