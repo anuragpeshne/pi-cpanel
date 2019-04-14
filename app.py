@@ -40,6 +40,11 @@ def get_temp():
         temp_output = "NA"
     return temp_output
 
+@app.route("/temp_sensor", methods=["GET"])
+def get_temp_sensor():
+    temp_output = subprocess.check_output(["head", "-n", "1", "/home/pi/code/tempd/tempdb"])
+    return temp_output
+
 @app.route("/play_link", methods=["POST"])
 def play_link():
     if omx_player.nowplaying == True:

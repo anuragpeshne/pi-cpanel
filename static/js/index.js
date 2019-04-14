@@ -75,6 +75,18 @@ $(document).ready(function() {
             $('#temp').html(data);
         });
     }
+
+    function update_temp_sensor() {
+        $.ajax({
+            url: "/temp_sensor",
+            method: 'GET',
+            context: document.body,
+            timeout: 5000,
+        }).done(function(data) {
+            $('#tempSensor').html(data);
+        });
+    }
     update_temp(); // set it once and let it update periodically
+    update_temp_sensor();
     window.setInterval(update_temp, TEMP_REFRESH_INTERVAL);
 });
